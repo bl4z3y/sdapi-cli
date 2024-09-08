@@ -2,8 +2,8 @@ import base64
 from tkinter import filedialog, Tk, Label, Button, Canvas, PhotoImage
 from tkinter import messagebox
 from PIL import Image, ImageTk
-import io
-import os
+import io, os
+from datetime import datetime
 
 # Função para decodificar a string base64 e salvar como PNG
 def base64_para_imagem(base64_string):
@@ -19,10 +19,26 @@ def base64_para_imagem(base64_string):
 
 # Função para salvar a imagem em um caminho escolhido
 def salvar_imagem(imagem):
-    caminho_arquivo = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
-    if caminho_arquivo:
+    # Define o nome do arquivo com o formato de data e hora
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H_%M_%S")
+    nome_arquivo = f"{timestamp}.png"
+    
+    # Define o diretório 'PNGout'
+    diretorio_saida = "PNGout"
+    
+    # Verifica se o diretório existe, caso contrário, cria-o
+    if not os.path.exists(diretorio_saida):
+        os.makedirs(diretorio_saida)
+    
+    # Caminho completo para salvar a imagem
+    caminho_arquivo = os.path.join(diretorio_saida, nome_arquivo)
+    
+    # Salva a imagem
+    try:
         imagem.save(caminho_arquivo, 'PNG')
         messagebox.showinfo("Sucesso", f"Imagem salva em {caminho_arquivo}")
+    except Exception as e:
+        messagebox.showerror("Erro", f"Falha ao salvar a imagem: {str(e)}")
 
 # Função para criar a interface GUI para mostrar e baixar a imagem
 def mostrar_interface(imagem):
@@ -58,8 +74,8 @@ def obter_base64_de_entrada(entrada):
         return entrada.strip()  # Retorna a entrada como base64, assumindo que seja válida
 
 # Função principal para conversão e GUI
-def conversor_base64_para_png(entrada, file=False):
-    if file: base64_string = obter_base64_de_entrada(entrada)
+def conversor_base64_para_png(entrada):
+    base64_string = obter_base64_de_entrada(entrada)
     if base64_string:
         imagem = base64_para_imagem(base64_string)
         if imagem: mostrar_interface(imagem)
