@@ -23,7 +23,16 @@ def prompt(neg=False):
     else: p: str = input("P: ")
     return p
 
-def txt2img(url: str, headers: dict, result: dict):
+def txt2img(url: str, headers: dict, result: dict, body: dict):
+    request = requests.post(url, headers=headers, json=body)
+    result['image'] = request.json()['images'][0]
+
+def main():
+    url, headers = get_url()
+    txt2img_url = url + "/sdapi/v1/txt2img"
+    progress_url = url + "/sdapi/v1/progress"
+
+    result = {}  # Dicionário para armazenar o resultado da thread
     body = {
                 "prompt": prompt(),
                 "negative_prompt": prompt(neg=True),
@@ -38,22 +47,13 @@ def txt2img(url: str, headers: dict, result: dict):
                 "height": 768
     }
 
-    request = requests.post(url, headers=headers, json=body)
-    result['image'] = request.json()['images'][0]
-
-def main():
-    url, headers = get_url()
-    txt2img_url = url + "/sdapi/v1/txt2img"
-    progress_url = url + "/sdapi/v1/progress"
-
-    result = {}  # Dicionário para armazenar o resultado da thread
-
+    
     # Criar e iniciar a thread para gerar a imagem
-    thread = threading.Thread(target=txt2img, args=(txt2img_url, headers, result))
+    thread = threading.Thread(target=txt2img, args=(txt2img_url, headers, result, body))
     thread.start()
 
     # Monitorar o progresso
-    while int(requests.get(progress_url).json()['progress']) not in [0, 100]:
+    while int(requests.get(progress_url).json()['progress']) != 100:
         os.system(CL)
         progress = round(requests.get(progress_url).json()['progress'], 2)
         print(f"Gerando imagem... ({progress * 100}%)")
