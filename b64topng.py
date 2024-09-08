@@ -60,11 +60,11 @@ def obter_base64_de_entrada(entrada):
 # Função principal para conversão e GUI
 def conversor_base64_para_png(entrada, file=False):
     if file: base64_string = obter_base64_de_entrada(entrada)
-    elif base64_string:
+    if base64_string:
         imagem = base64_para_imagem(base64_string)
         if imagem: mostrar_interface(imagem)
     else:
-        imagem = base64_para_imagem(base64_string)
+        imagem = base64_para_imagem(entrada)
         if imagem: mostrar_interface(imagem)
 
 if __name__ == "__main__":

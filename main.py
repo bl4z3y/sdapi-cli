@@ -72,7 +72,7 @@ def main():
         f.write(img_b64)
     print(f"Base64 salvo em: {path}")
     _ = int(input("Mostrar imagem ou outro prompt? (1; 2) "))
-    if _ == 1: b64topng.mostrar_interface(img_b64)
+    if _ == 1: b64topng.conversor_base64_para_png(img_b64)
     else: main()
 
 if __name__ == "__main__":
