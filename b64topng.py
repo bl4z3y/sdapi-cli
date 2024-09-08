@@ -58,12 +58,14 @@ def obter_base64_de_entrada(entrada):
         return entrada.strip()  # Retorna a entrada como base64, assumindo que seja válida
 
 # Função principal para conversão e GUI
-def conversor_base64_para_png(entrada):
-    base64_string = obter_base64_de_entrada(entrada)
-    if base64_string:
+def conversor_base64_para_png(entrada, file=False):
+    if file: base64_string = obter_base64_de_entrada(entrada)
+    elif base64_string:
         imagem = base64_para_imagem(base64_string)
-        if imagem:
-            mostrar_interface(imagem)
+        if imagem: mostrar_interface(imagem)
+    else:
+        imagem = base64_para_imagem(base64_string)
+        if imagem: mostrar_interface(imagem)
 
 if __name__ == "__main__":
     # Entrada de base64 pela CLI ou caminho do arquivo
