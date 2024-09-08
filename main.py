@@ -53,7 +53,7 @@ def main():
     thread.start()
 
     # Monitorar o progresso
-    while int(requests.get(progress_url).json()['progress']) != (0 or 100):
+    while int(requests.get(progress_url).json()['progress']) not in [0, 100]:
         os.system(CL)
         progress = round(requests.get(progress_url).json()['progress'], 2)
         print(f"Gerando imagem... ({progress * 100}%)")
