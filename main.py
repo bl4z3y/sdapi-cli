@@ -46,14 +46,13 @@ def main():
                 "width": 512,
                 "height": 768
     }
-
     
     # Criar e iniciar a thread para gerar a imagem
     thread = threading.Thread(target=txt2img, args=(txt2img_url, headers, result, body))
     thread.start()
 
     # Monitorar o progresso
-    while int(requests.get(progress_url).json()['progress']) != 100:
+    while int(requests.get(progress_url).json()['progress']) not in [0, 100]:
         os.system(CL)
         progress = round(requests.get(progress_url).json()['progress'], 2)
         print(f"Gerando imagem... ({progress * 100}%)")
